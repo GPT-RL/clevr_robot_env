@@ -21,7 +21,9 @@ import six.moves.cPickle as pickle
 # pre-generated questions
 import clevr_robot_env.assets.pregenerated_data
 
-with importlib.resources.path(clevr_robot_env.assets.pregenerated_data, "all_question.pkl") as path:
+with importlib.resources.path(
+    clevr_robot_env.assets.pregenerated_data, "all_question.pkl"
+) as path:
     pregen_path = path
 with importlib.resources.path(
     clevr_robot_env.assets.pregenerated_data, "all_questions_variable_input.pkl"
@@ -30,43 +32,43 @@ with importlib.resources.path(
 
 
 def load_all_question(path=pregen_path):
-  with open(path, 'rb') as f:
-    pregen_content = pickle.load(f)
-  questions = []
-  for q in pregen_content:
-    questions.append((q['question'], q['program']))
-  return questions
+    with open(path, "rb") as f:
+        pregen_content = pickle.load(f)
+    questions = []
+    for q in pregen_content:
+        questions.append((q["question"], q["program"]))
+    return questions
 
 
 def create_train_test_question_split():
-  """Create random train/test split on pregenerated questions."""
-  all_questions = load_all_question(pregen_path)
-  all_questions_len = len(all_questions)
+    """Create random train/test split on pregenerated questions."""
+    all_questions = load_all_question(pregen_path)
+    all_questions_len = len(all_questions)
 
-  indices = np.arange(all_questions_len)
-  indices_train = indices[::3].astype(np.int32)
-  indices_test = np.int32(list(set(indices) - set(indices_train)))
-  aq = np.array(all_questions)
+    indices = np.arange(all_questions_len)
+    indices_train = indices[::3].astype(np.int32)
+    indices_test = np.int32(list(set(indices) - set(indices_train)))
+    aq = np.array(all_questions)
 
-  all_questions_train = list(aq[indices_train])
-  all_questions_test = list(aq[indices_test])
-  return all_questions_train, all_questions_test
+    all_questions_train = list(aq[indices_train])
+    all_questions_test = list(aq[indices_test])
+    return all_questions_train, all_questions_test
 
 
 def create_systematic_generalization_split():
-  """Create systematic generalization split on pregenerated questions."""
-  questions = load_all_question(pregen_path)
-  filtered_colors = ['red']
-  filtered_direction = ['right', 'behind', 'front', 'left']
-  test_questions = []
-  train_questions = []
-  for qp in questions:
-    q, _ = qp
-    q_len = len(q)
-    c_exist = [c in q[:q_len // 3] for c in filtered_colors]
-    d_exist = [d in q for d in filtered_direction]
-    if np.int32(c_exist).sum() > 0 and np.int32(d_exist).sum() > 0:
-      test_questions.append(qp)
-    else:
-      train_questions.append(qp)
-  return train_questions, test_questions
+    """Create systematic generalization split on pregenerated questions."""
+    questions = load_all_question(pregen_path)
+    filtered_colors = ["red"]
+    filtered_direction = ["right", "behind", "front", "left"]
+    test_questions = []
+    train_questions = []
+    for qp in questions:
+        q, _ = qp
+        q_len = len(q)
+        c_exist = [c in q[: q_len // 3] for c in filtered_colors]
+        d_exist = [d in q for d in filtered_direction]
+        if np.int32(c_exist).sum() > 0 and np.int32(d_exist).sum() > 0:
+            test_questions.append(qp)
+        else:
+            train_questions.append(qp)
+    return train_questions, test_questions

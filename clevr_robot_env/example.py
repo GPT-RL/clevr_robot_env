@@ -28,8 +28,9 @@ FLAGS = flags.FLAGS
 
 
 def main(_):
-  env = ClevrEnv()
-  env.step(env.sample_random_action())
+    env = ClevrEnv()
+    env.step(env.sample_random_action())
 
-if __name__ == '__main__':
-  app.run(main)
+
+if __name__ == "__main__":
+    app.run(main)
