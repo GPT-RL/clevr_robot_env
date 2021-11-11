@@ -81,10 +81,6 @@ class MujocoEnv(gym.Env):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
-    def reset_model(self):
-        """Reset the robot degrees of freedom (qpos and qvel)."""
-        raise NotImplementedError("Implement this in each subclass.")
-
     def viewer_setup(self):
         """This method is called when the viewer is initialized and after all reset.
 

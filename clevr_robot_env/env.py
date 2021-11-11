@@ -22,15 +22,12 @@ from __future__ import print_function
 
 import importlib.resources
 import json
-import os
-import random
 
 import cv2
 import numpy as np
 from dm_control import mujoco
 from gym import spaces
 from gym import utils
-import numpy as np
 
 import clevr_robot_env.third_party.clevr_robot_env_utils.generate_scene as gs
 import clevr_robot_env.third_party.clevr_robot_env_utils.question_engine as qeng
@@ -38,7 +35,6 @@ from clevr_robot_env import assets, mujoco_env
 from clevr_robot_env import metadata
 from clevr_robot_env import templates
 from clevr_robot_env.assets import pregenerated_data
-from clevr_robot_env.mujoco_env import MujocoEnv
 from clevr_robot_env.third_party.clevr_robot_env_utils.generate_question import (
     generate_question_from_scene_struct,
 )
@@ -289,7 +285,7 @@ class ClevrEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             )
         else:
             random_loc = "{} {} -0.2".format(
-                random.uniform(-0.6, 0.6), random.uniform(-0.3, 0.5)
+                self.np_random.uniform(-0.6, 0.6), self.np_random.uniform(-0.3, 0.5)
             )
             curr_scene_xml = convert_scene_to_xml(
                 self.scene_graph,
@@ -332,7 +328,7 @@ class ClevrEnv(mujoco_env.MujocoEnv, utils.EzPickle):
                 candidates = self.all_questions
             else:
                 candidates = self.valid_questions
-            random.shuffle(candidates)
+            self.np_random.shuffle(candidates)
             false_question_count = 0
 
             for q, p in candidates:
@@ -344,7 +340,7 @@ class ClevrEnv(mujoco_env.MujocoEnv, utils.EzPickle):
                     currently_false.append((q, p, fixed_object_idx, fixed_object_loc))
                     false_question_count += 1
 
-            random.shuffle(currently_false)
+            self.np_random.shuffle(currently_false)
 
         if goal:
             full_answer = self.answer_question(goal, True)
@@ -499,7 +495,7 @@ class ClevrEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             )
         else:
             random_loc = "{} {} -0.2".format(
-                random.uniform(-0.6, 0.6), random.uniform(-0.3, 0.5)
+                self.np_random.uniform(-0.6, 0.6), self.np_random.uniform(-0.3, 0.5)
             )
             curr_scene_xml = convert_scene_to_xml(
                 self.scene_graph,
@@ -593,13 +589,13 @@ class ClevrEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         candidate_objective = self.all_questions
         if self.cache_valid_questions:
             candidate_objective = self.valid_questions
-        random.shuffle(candidate_objective)
+        self.np_random.shuffle(candidate_objective)
         for g, gp in candidate_objective:
             if not self.answer_question(gp):
                 self.all_goals_satisfied = False
                 return g, gp
         print("All goal are satisfied.")
-        goal, goal_program = random.choice(candidate_objective)
+        goal, goal_program = self.np_random.choice(candidate_objective)
         self.all_goals_satisfied = True
         return goal, goal_program
 
@@ -724,7 +720,7 @@ class ClevrEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         index, loc = -1, None
         for i, a in enumerate(answer):
             if a is True:
-                index = random.choice(answer[i - 1])
+                index = self.np_random.choice(answer[i - 1])
             elif isinstance(a, float) or isinstance(a, int):
                 index = answer[i]
                 break

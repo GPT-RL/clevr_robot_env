@@ -59,9 +59,9 @@ works if you are in the diverse objects setting and has no effect otherwise).
 
 ```Python
 action = env.sample_random_action()
-obs, reward, _, _ = env.step(action)
+obs, reward, _, _ = env.step(action, )
 obs = env.reset()  # regular reset
-obs = env.reset(new_scene_content=True) # sample new objects
+obs = env.reset(new_scene_content=True)  # sample new objects
 ```
 
 `env.sample_random_action` differs from `env.action_space.sample` if the action
@@ -93,7 +93,7 @@ expensive and unnecessary, we use lazy evaluation which only re-compute it when 
 You may also opt to update them at every step by:
 
 ```Python
-obs, reward, _, info = env.step(action, update_des=True)
+obs, reward, _, info = env.step(action, )
 current_descriptions = info['descriptions']
 current_full_descriptions = info['full_descriptions']
 ```
