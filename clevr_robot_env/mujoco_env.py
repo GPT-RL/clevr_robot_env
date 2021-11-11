@@ -59,8 +59,8 @@ class MujocoEnv(gym.Env, ABC):
 
         self.init_qpos = self.physics.data.qpos.ravel().copy()
         self.init_qvel = self.physics.data.qvel.ravel().copy()
-        observation, _, done, _ = self.step(np.zeros(self.physics.model.nu))
-        assert not done
+        self.random_start = True
+        observation = self.reset()
         self.obs_dim = observation.size
 
         bounds = self.physics.model.actuator_ctrlrange.copy()
