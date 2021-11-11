@@ -38,6 +38,7 @@ class MujocoEnv(gym.Env, ABC):
     def __init__(
         self, model_path, frame_skip, max_episode_steps=None, reward_threshold=None
     ):
+        self.seed(0)
         full_path = Path(model_path)
         if not full_path.is_absolute():
             with importlib.resources.path(assets, full_path) as path:

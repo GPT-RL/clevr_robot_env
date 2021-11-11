@@ -16,4 +16,4 @@
 """Init module for the CLEVR-Robot environment."""
 
 from clevr_robot_env.env import ClevrEnv
-from clevr_robot_env.her_env import HERClevrEnv
+from clevr_robot_env.her_env import HERWrapper

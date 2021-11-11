@@ -123,6 +123,7 @@ class ClevrEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     ):
 
         utils.EzPickle.__init__(self)
+        self.seed(0)
         initial_xml_path = DEFAULT_XML_PATH
         self.obj_name = []
         self.action_type = action_type
@@ -141,6 +142,10 @@ class ClevrEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         self.min_change_th = min_change_th
         self.use_polar = use_polar
         self.suppress_other_movement = suppress_other_movement
+
+        # agent type and randomness of starting location
+        self.agent_type = agent_type
+        self.random_start = random_start
 
         if use_subset_instruction and systematic_generalization:
             train, test = load_utils.create_systematic_generalization_split()
@@ -273,9 +278,6 @@ class ClevrEnv(mujoco_env.MujocoEnv, utils.EzPickle):
                 low=0, high=255, shape=(self.res, self.res, 3), dtype=np.uint8
             )
 
-        # agent type and randomness of starting location
-        self.agent_type = agent_type
-        self.random_start = random_start
 
         if not self.random_start:
             curr_scene_xml = convert_scene_to_xml(
