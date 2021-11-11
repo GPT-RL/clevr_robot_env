@@ -20,6 +20,7 @@ from __future__ import division
 from __future__ import print_function
 
 import importlib.resources
+from abc import ABC
 from pathlib import Path
 
 from dm_control import mujoco
@@ -31,7 +32,7 @@ import numpy as np
 from clevr_robot_env import assets
 
 
-class MujocoEnv(gym.Env):
+class MujocoEnv(gym.Env, ABC):
     """Custom Mujoco environment that uses dm control's wrapper."""
 
     def __init__(
